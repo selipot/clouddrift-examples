@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "clouddrift-examples"
+version = "0.1.0"
+authors = [
+  { name="Shane Elipot", email="selipot@miami.edu" },
+  { name="Philippe Miron", email="philippemiron@gmail.com" },
+  { name="Milan Curcic", email="mcurcic@miami.edu" }
+]
+description = "Example notebooks for the clouddrift project"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "clouddrift>=0.2.0"
+    "jupyter>=1.0.0",
+    "matplotlib>=3.6.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/Cloud-Drift/clouddrift-examples"
