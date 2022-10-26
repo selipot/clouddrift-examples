@@ -14,3 +14,31 @@ look, and/or run on your computer, these examples:
   Awkward Array instances for analysis, and how to read and write ragged
   array data in NetCDF and Apache Parquet file formats.
 * [GDP 6-hourly](notebooks/gdp.ipynb): Same as above, but for 6-hourly GDP data
+
+## Running the notebooks on your computer
+
+### Get the code
+
+```
+git clone https://github.com/cloud-drift/clouddrift-examples
+cd clouddrift-examples
+```
+
+### Create a Python environment and install dependencies
+
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install -U pip
+pip install .
+```
+
+### Run the notebooks
+
+You can now start the Jupyter server with the GDP notebook like this
+
+```
+jupyter notebook notebooks/gdp.ipynb
+```
+
+and similar for other notebooks.
