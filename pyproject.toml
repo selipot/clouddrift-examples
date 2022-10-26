@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "clouddrift>=0.2.0"
+    "clouddrift>=0.2.0",
     "jupyter>=1.0.0",
     "matplotlib>=3.6.1"
 ]
