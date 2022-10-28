@@ -14,6 +14,7 @@ look, and/or run on your computer, these examples:
   Awkward Array instances for analysis, and how to read and write ragged
   array data in NetCDF and Apache Parquet file formats.
 * [GDP 6-hourly](notebooks/gdp.ipynb): Same as above, but for 6-hourly GDP data
+* [GLAD](notebooks/glad.ipynb): Loading the CARTHE GLAD data
 
 ## Running the notebooks on your computer
 

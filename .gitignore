@@ -131,3 +131,6 @@ dmypy.json
 # Data files
 *.nc
 *.parquet
+
+# Temporary directories
+/data/process
