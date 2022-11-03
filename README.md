@@ -1,5 +1,7 @@
 # clouddrift-examples
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Cloud-Drift/clouddrift-examples/main?labpath=notebooks)
+
 This repo provides the example notebooks for the
 [CloudDrift](https://github.com/cloud-drift/clouddrift) library.
 
