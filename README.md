@@ -5,19 +5,15 @@
 This repo provides the example notebooks for the
 [CloudDrift](https://github.com/cloud-drift/clouddrift) library.
 
-## Examples
+## Content
 
 To get a taste of the `clouddrift` package and how it works,
-look, and/or run on your computer, these examples:
+look, and/or run on your computer, a number of example notebooks are available:
 
-* [GDP](notebooks/gdp.ipynb): A demo of `clouddrift` working on the
-  hourly Global Drifter Program (GDP) data. It shows how to ingest GDP data
-  into the `RaggedArray` class, how to emit the data as Xarray Dataset or 
-  Awkward Array instances for analysis, and how to read and write ragged
-  array data in NetCDF and Apache Parquet file formats.
-* [GDP 6-hourly](notebooks/gdp.ipynb): Same as above, but for 6-hourly GDP data
-* [GLAD](notebooks/glad.ipynb): Loading the CARTHE GLAD data
-* [Simulation data](notebooks/simulation-data.ipynb): Loading Lagrangian simulation data
+* [GDP](notebooks/gdp.ipynb): A demo of `clouddrift` working on the hourly dataset of the [NOAA Global Drifter Program (GDP)](https://www.aoml.noaa.gov/global-drifter-program/). It shows how to ingest GDP data into the `RaggedArray` class, how to emit the data as xarray Dataset or Awkward Array instances for analysis, and how to read and write ragged array data in NetCDF and Apache Parquet file formats.
+* [GDP 6-hourly](notebooks/gdp.ipynb): Same as above, but for 6-hourly GDP dataset.
+* [GLAD](notebooks/glad.ipynb): An example notebook for the [CARTHE GLAD](http://carthe.org/glad/) dataset.
+* [Simulation data](notebooks/simulation-data.ipynb): An example using a dataset from a Lagrangian simulation experiment.
 
 ## Running the notebooks on your computer
 
@@ -45,4 +41,4 @@ You can now start the Jupyter server with the GDP notebook like this
 jupyter notebook notebooks/gdp.ipynb
 ```
 
-and similar for other notebooks.
+and similarly for the other notebooks.
