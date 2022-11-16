@@ -132,6 +132,7 @@ dmypy.json
 .pyre/
 
 # Data files
+*.dat
 *.nc
 *.parquet
 
