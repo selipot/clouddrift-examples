@@ -15,9 +15,9 @@ aoml_directories = [
     "buoydata_1_5000",
     "buoydata_5001_10000",
     "buoydata_10001_15000",
-    "buoydata_15001_dec20",
+    "buoydata_15001_jul22",
 ]
-version = "dec20"
+version = "jul22"
 folder = "../data/raw/gdp-6hourly"
 file_pattern = "drifter_{id}.nc"
 
