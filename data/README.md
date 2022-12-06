@@ -25,7 +25,7 @@ Processed data as ragged arrays are stored in the appropriate `process/` subfold
 
 For the GDP datasets, we suggest retrieving directly the ragged array NetCDF file `gdp_v2.00.nc` from NOAA NCEI ([link](https://www.nodc.noaa.gov/archive/arc0199/0248584/1.1/data/0-data/gdp_v2.00.nc)) and stored it in the `process/` folder (or any convenient location).
 
-For *advanced users* and *data originators*, Notebooks are made available to present the steps to manually create a NetCDF ragged array from a collection of individual trajectory files (e.g. `dataformat-gdp.ipynb`) or the numerical output of a Lagrangian simulation (e.g. `dataformat-numerical.ipynb`).
+For *advanced users* and *data originators*, Notebooks are made available to present the steps to manually create a NetCDF ragged array from a collection of individual trajectory files (e.g. `dataformat-gdp.ipynb`) or the numerical output of a Lagrangian simulation (e.g. `simulation-data.ipynb`).
 
 ## References
 
