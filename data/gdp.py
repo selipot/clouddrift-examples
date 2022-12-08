@@ -276,7 +276,7 @@ def preprocess(index: int) -> xr.Dataset:
         "latitude": {"long_name": "Latitude", "units": "degrees_north"},
         "time": {"long_name": "Time", "units": "seconds since 1970-01-01 00:00:00"},
         "ids": {
-            "long_name": "Global Drifter Program Buoy identification number repeated along observations",
+            "long_name": "Global Drifter Program Buoy ID repeated along observations",
             "units": "-",
         },
         "rowsize": {
