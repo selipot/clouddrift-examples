@@ -374,11 +374,11 @@ def preprocess(index: int) -> xr.Dataset:
         "ve": {"long_name": "Eastward velocity", "units": "m/s"},
         "vn": {"long_name": "Northward velocity", "units": "m/s"},
         "err_lat": {
-            "long_name": "95% confidence interval in latitude",
+            "long_name": "Standard error in latitude",
             "units": "degrees_north",
         },
         "err_lon": {
-            "long_name": "95% confidence interval in longitude",
+            "long_name": "Standard error in longitude",
             "units": "degrees_east",
         },
         "temp": {
