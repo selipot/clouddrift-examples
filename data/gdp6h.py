@@ -55,7 +55,7 @@ def download(drifter_ids: list = None, n_random_id: int = None):
 
     :param drifter_ids [list]: list of drifter to retrieve (Default: all)
     :param n_random_id [int]: randomly select n drifter netCDF files
-    :return drifters_ids [list]: list of retrived drifter
+    :return drifters_ids [list]: list of retrieved drifter
     """
     # load the complete list of drifter IDs
     if drifter_ids == None:
@@ -287,7 +287,7 @@ def preprocess(index: int) -> xr.Dataset:
         "latitude": {"long_name": "Latitude", "units": "degrees_north"},
         "time": {"long_name": "Time", "units": "seconds since 1970-01-01 00:00:00"},
         "ids": {
-            "long_name": "Global Drifter Program Buoy identification number repeated along observations",
+            "long_name": "Global Drifter Program Buoy ID repeated along observations",
             "units": "-",
         },
         "rowsize": {
@@ -382,14 +382,12 @@ def preprocess(index: int) -> xr.Dataset:
             "units": "degrees_east",
         },
         "temp": {
-            "long_name": "Fitted sea water temperature",
-            "units": "Kelvin",
-            "comments": "Estimated near-surface sea water temperature from drifting buoy measurements. It is the sum of the fitted near-surface non-diurnal sea water temperature and fitted diurnal sea water temperature anomaly. Discrepancies may occur because of rounding.",
+            "long_name": "Sea Surface Bulk Temperature",
+            "units": "degree_Celcius",
         },
         "err_temp": {
-            "long_name": "Standard uncertainty of fitted sea water temperature",
-            "units": "Kelvin",
-            "comments": "Estimated one standard error of near-surface sea water temperature estimate from drifting buoy measurements",
+            "long_name": "Standard error in temperature",
+            "units": "degree_Celcius",
         },
         "drogue_status": {
             "long_name": "Status indicating the presence of the drogue",
@@ -402,13 +400,13 @@ def preprocess(index: int) -> xr.Dataset:
     # global attributes
     attrs = {
         "title": "Global Drifter Program six-hourly drifting buoy collection",
-        "history": "Last update December 2020.  Metadata from dirall.dat and deplog.dat",
+        "history": "Last update July 2022.  Metadata from dirall.dat and deplog.dat",
         "Conventions": "CF-1.6",
         "date_created": datetime.now().isoformat(),
         "publisher_name": "GDP Drifter DAC",
         "publisher_email": "aoml.dftr@noaa.gov",
         "publisher_url": "https://www.aoml.noaa.gov/phod/gdp",
-        "licence": "MIT License",
+        "licence": "freely available",
         "processing_level": "Level 2 QC by GDP drifter DAC",
         "metadata_link": "https://www.aoml.noaa.gov/phod/dac/dirall.html",
         "contributor_name": "NOAA Global Drifter Program",
@@ -416,6 +414,7 @@ def preprocess(index: int) -> xr.Dataset:
         "institution": "NOAA Atlantic Oceanographic and Meteorological Laboratory",
         "acknowledgement": "Lumpkin, Rick; Centurioni, Luca (2019). NOAA Global Drifter Program quality-controlled 6-hour interpolated data from ocean surface drifting buoys. [indicate subset used]. NOAA National Centers for Environmental Information. Dataset. https://doi.org/10.25921/7ntx-z961. Accessed [date].",
         "summary": "Global Drifter Program six-hourly data",
+        "doi": "10.25921/7ntx-z961",
     }
 
     # set attributes
