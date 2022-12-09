@@ -276,7 +276,7 @@ def preprocess(index: int) -> xr.Dataset:
         "latitude": {"long_name": "Latitude", "units": "degrees_north"},
         "time": {"long_name": "Time", "units": "seconds since 1970-01-01 00:00:00"},
         "ids": {
-            "long_name": "Global Drifter Program Buoy identification number repeated along observations",
+            "long_name": "Global Drifter Program Buoy ID repeated along observations",
             "units": "-",
         },
         "rowsize": {
@@ -452,14 +452,15 @@ def preprocess(index: int) -> xr.Dataset:
         "publisher_name": "GDP Drifter DAC",
         "publisher_email": "aoml.dftr@noaa.gov",
         "publisher_url": "https://www.aoml.noaa.gov/phod/gdp",
-        "licence": "MIT License",
+        "licence": "freely available",
         "processing_level": "Level 2 QC by GDP drifter DAC",
         "metadata_link": "https://www.aoml.noaa.gov/phod/dac/dirall.html",
         "contributor_name": "NOAA Global Drifter Program",
         "contributor_role": "Data Acquisition Center",
         "institution": "NOAA Atlantic Oceanographic and Meteorological Laboratory",
-        "acknowledgement": "Elipot et al. (2022): A Dataset of Hourly Sea Surface Temperature From Drifting Buoys, Scientific Data, 9, 567, https://dx.doi.org/10.1038/s41597-022-01670-2. Elipot et al. (2016): Global Drifter Program quality-controlled hourly interpolated data from ocean surface drifting buoys, version 2.00, NOAA National Centers for Environmental Information, https://agupubs.onlinelibrary.wiley.com/doi/full/10.1002/2016JC011716TBA, Accessed [date].",
+        "acknowledgement": "Elipot, Shane; Sykulski, Adam; Lumpkin, Rick; Centurioni, Luca; Pazos, Mayra (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide. [indicate subset used]. NOAA National Centers for Environmental Information. Dataset. https://doi.org/10.25921/x46c-3620. Accessed [date]. Elipot et al. (2022): A Dataset of Hourly Sea Surface Temperature From Drifting Buoys, Scientific Data, 9, 567, https://dx.doi.org/10.1038/s41597-022-01670-2. Elipot et al. (2016): A global surface drifter dataset at hourly resolution, J. Geophys. Res.-Oceans, 121, https://dx.doi.org/10.1002/2016JC011716.", 
         "summary": "Global Drifter Program hourly data",
+        "doi": "10.25921/x46c-3620",
     }
 
     # set attributes
