@@ -187,32 +187,6 @@ def preprocess(index: int) -> xr.Dataset:
         decode_coords=False,
     )
 
-    # parse the date with custom function
-    ds["deploy_date"].data = decode_date(np.array([ds.deploy_date.data[0]]))
-    ds["end_date"].data = decode_date(np.array([ds.end_date.data[0]]))
-    ds["drogue_lost_date"].data = decode_date(np.array([ds.drogue_lost_date.data[0]]))
-    ds["time"].data = decode_date(np.array([ds.time.data[0]]))
-
-    # convert fill values to nan
-    ds["end_lon"].data = fill_values(ds["end_lon"].data)
-    ds["end_lat"].data = fill_values(ds["end_lat"].data)
-    ds["ve"].data = fill_values(ds["ve"].data)
-    ds["vn"].data = fill_values(ds["vn"].data)
-    ds["temp"].data = fill_values(ds["temp"].data)
-
-    # fix missing values stored as str
-    for var in [
-        "longitude",
-        "latitude",
-        "err_lat",
-        "err_lon",
-        "ve",
-        "vn",
-        "temp",
-        "err_temp",
-    ]:
-        ds[var].encoding["missing value"] = -1e-34
-
     # convert attributes to variable
     ds["DeployingShip"] = (("traj"), cut_str(ds.DeployingShip, 20))
     ds["DeploymentStatus"] = (("traj"), cut_str(ds.DeploymentStatus, 20))
@@ -284,6 +258,7 @@ def preprocess(index: int) -> xr.Dataset:
     vars_attrs = {
         "ID": {"long_name": "Global Drifter Program Buoy ID", "units": "-"},
         "longitude": {"long_name": "Longitude", "units": "degrees_east"},
+        "lon360": {"long_name": "Longitude", "units": "degrees_east"},
         "latitude": {"long_name": "Latitude", "units": "degrees_north"},
         "time": {"long_name": "Time", "units": "seconds since 1970-01-01 00:00:00"},
         "ids": {
@@ -421,9 +396,6 @@ def preprocess(index: int) -> xr.Dataset:
     for var in vars_attrs.keys():
         ds[var].attrs = vars_attrs[var]
     ds.attrs = attrs
-
-    # remove vars
-    ds = ds.drop_vars("lon360")
 
     # set coordinates
     ds = ds.set_coords(["ids", "longitude", "latitude", "time"])
