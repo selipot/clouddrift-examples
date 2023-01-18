@@ -10,21 +10,83 @@ import os
 from os.path import isfile, join, exists
 import warnings
 
+
+def parse_directory_file(filename: str) -> pd.DataFrame:
+    """
+    Read a directory file
+
+    Note: due to naming of those files, it requires manual intervention to update the last file name after an update of the dataset
+
+    Args:
+        filename (str): filename of the dirfl file
+
+    Returns:
+        pd.DataFrame: sorted list of drifters
+    """
+    aoml_dirfl_url = "https://www.aoml.noaa.gov/ftp/pub/phod/buoydata/"
+
+    df = pd.read_csv(join(aoml_dirfl_url, filename), delimiter="\s+", header=None)
+    df[4] = df[4] + " " + df[5]
+    df[8] = df[8] + " " + df[9]
+    df[12] = df[12] + " " + df[13]
+    df = df.drop(columns=[5, 9, 13])
+    df.columns = [
+        "ID",
+        "WMO_number",
+        "program_number",
+        "buoys_type",
+        "Deployment_date",
+        "Deployment_lat",
+        "Deployment_lon",
+        "End_date",
+        "End_lat",
+        "End_lon",
+        "Drogue_off_date",
+        "death_code",
+    ]
+    for t in ["Deployment_date", "End_date", "Drogue_off_date"]:
+        df[t] = pd.to_datetime(df[t], format="%Y/%m/%d %H:%M", errors="coerce")
+    return df
+
+
+version = "July 2022"
 aoml_https_url = "https://www.aoml.noaa.gov/ftp/pub/phod/lumpkin/netcdf/"
+file_pattern = "drifter_{id}.nc"
+
+# create raw data folder and subdirectories
+folder = "../data/raw/gdp-6hourly"
 aoml_directories = [
     "buoydata_1_5000",
     "buoydata_5001_10000",
     "buoydata_10001_15000",
     "buoydata_15001_jul22",
 ]
-version = "jul22"
-folder = "../data/raw/gdp-6hourly"
-file_pattern = "drifter_{id}.nc"
-
-# create raw data folder and subfolders
 os.makedirs(folder, exist_ok=exists(folder))
 for directory in aoml_directories:
     os.makedirs(join(folder, directory), exist_ok=exists(join(folder, directory)))
+
+# read the directory files
+file_url = [
+    "dirfl_1_5000.dat",
+    "dirfl_5001_10000.dat",
+    "dirfl_10001_15000.dat",
+    "dirfl_15001_jul22.dat",
+]
+df = pd.concat([parse_directory_file(f) for f in file_url])
+df.sort_values(["Deployment_date"], inplace=True, ignore_index=True)
+
+
+def order_by_date(idx):
+    """
+    From the previously sorted directory files DataFrame, this function
+    returns the drifter indices sorted by their end_date.
+    Args:
+        idx [list]: list of drifters to include in the ragged array
+    Returns:
+        idx [list]: sorted list of drifters
+    """
+    return df.ID[np.where(np.in1d(df.ID, idx))[0]].values
+
 
 # find out what drifters are part of each directory
 dict_id = {}
@@ -58,7 +120,7 @@ def download(drifter_ids: list = None, n_random_id: int = None):
     :return drifters_ids [list]: list of retrieved drifter
     """
     # load the complete list of drifter IDs
-    if drifter_ids == None:
+    if drifter_ids is None:
         drifter_ids = all_drifter_ids
 
     if n_random_id:
@@ -90,7 +152,7 @@ def download(drifter_ids: list = None, n_random_id: int = None):
             )
         )
 
-    return drifter_ids
+    return order_by_date(drifter_ids)
 
 
 def decode_date(t):
@@ -375,7 +437,7 @@ def preprocess(index: int) -> xr.Dataset:
     # global attributes
     attrs = {
         "title": "Global Drifter Program six-hourly drifting buoy collection",
-        "history": "Last update July 2022.  Metadata from dirall.dat and deplog.dat",
+        "history": f"Last update {version}. Metadata from dirall.dat and deplog.dat",
         "Conventions": "CF-1.6",
         "date_created": datetime.now().isoformat(),
         "publisher_name": "GDP Drifter DAC",
@@ -398,6 +460,6 @@ def preprocess(index: int) -> xr.Dataset:
     ds.attrs = attrs
 
     # set coordinates
-    ds = ds.set_coords(["ids", "longitude", "latitude", "time"])
+    ds = ds.set_coords(["ids", "longitude", "lon360", "latitude", "time"])
 
     return ds
