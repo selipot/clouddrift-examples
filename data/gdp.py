@@ -27,9 +27,9 @@ def parse_directory_file(filename: str) -> pd.DataFrame:
     aoml_dirfl_url = "https://www.aoml.noaa.gov/ftp/pub/phod/buoydata/"
 
     df = pd.read_csv(join(aoml_dirfl_url, filename), delimiter="\s+", header=None)
-    df[4] = df[4] + " " + df[5]
-    df[8] = df[8] + " " + df[9]
-    df[12] = df[12] + " " + df[13]
+    df[4] += " " + df[5]
+    df[8] += " " + df[9]
+    df[12] += " " + df[13]
     df = df.drop(columns=[5, 9, 13])
     df.columns = [
         "ID",
