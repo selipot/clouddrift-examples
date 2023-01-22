@@ -11,10 +11,74 @@ from os.path import isfile, join, exists
 from dataclasses import dataclass
 import warnings
 
-folder = "../data/raw/gdp-v2.00/"
+
+def parse_directory_file(filename: str) -> pd.DataFrame:
+    """
+    Read a directory file
+
+    Note: due to naming of those files, it requires manual intervention to update the last file name after an update of the dataset
+
+    Args:
+        filename (str): filename of the dirfl file
+
+    Returns:
+        pd.DataFrame: sorted list of drifters
+    """
+    aoml_dirfl_url = "https://www.aoml.noaa.gov/ftp/pub/phod/buoydata/"
+
+    df = pd.read_csv(join(aoml_dirfl_url, filename), delimiter="\s+", header=None)
+    df[4] += " " + df[5]
+    df[8] += " " + df[9]
+    df[12] += " " + df[13]
+    df = df.drop(columns=[5, 9, 13])
+    df.columns = [
+        "ID",
+        "WMO_number",
+        "program_number",
+        "buoys_type",
+        "Deployment_date",
+        "Deployment_lat",
+        "Deployment_lon",
+        "End_date",
+        "End_lat",
+        "End_lon",
+        "Drogue_off_date",
+        "death_code",
+    ]
+    for t in ["Deployment_date", "End_date", "Drogue_off_date"]:
+        df[t] = pd.to_datetime(df[t], format="%Y/%m/%d %H:%M", errors="coerce")
+    return df
+
+
+version = "2.00"
 aoml_https_url = "https://www.aoml.noaa.gov/ftp/pub/phod/lumpkin/hourly/v2.00/netcdf/"
 file_pattern = "drifter_{id}.nc"
+
+# create subdirectory
+folder = "../data/raw/gdp-v2.00/"
 os.makedirs(folder, exist_ok=exists(folder))  # create raw data folder
+
+# directory files
+dirfl_names = [
+    "dirfl_1_5000.dat",
+    "dirfl_5001_10000.dat",
+    "dirfl_10001_15000.dat",
+    "dirfl_15001_jul22.dat",
+]
+df = pd.concat([parse_directory_file(f) for f in dirfl_names])
+df.sort_values(["Deployment_date"], inplace=True, ignore_index=True)
+
+
+def order_by_date(idx):
+    """
+    From the previously sorted directory files DataFrame, this function
+    returns the drifter indices sorted by their end_date.
+    Args:
+        idx [list]: list of drifters to include in the ragged array
+    Returns:
+        idx [list]: sorted list of drifters
+    """
+    return df.ID[np.where(np.in1d(df.ID, idx))[0]].values
 
 
 def fetch_netcdf(url, file):
@@ -34,7 +98,7 @@ def download(drifter_ids: list = None, n_random_id: int = None):
     :return drifters_ids [list]: list of retrived drifter
     """
     # retrieve all drifter ID numbers
-    if drifter_ids == None:
+    if drifter_ids is None:
         urlpath = urllib.request.urlopen(aoml_https_url)
         string = urlpath.read().decode("utf-8")
         pattern = re.compile("drifter_[0-9]*.nc")
@@ -70,7 +134,7 @@ def download(drifter_ids: list = None, n_random_id: int = None):
             )
         )
 
-    return drifter_ids
+    return order_by_date(drifter_ids)
 
 
 def decode_date(t):
@@ -89,7 +153,7 @@ def decode_date(t):
 
 def fill_values(var, default=np.nan):
     """
-    Change fill values (-1e+34, inf, -inf) in var array to value specifed by default
+    Change fill values (-1e+34, inf, -inf) in var array to value specified by default
     """
     missing_value = np.logical_or(np.isclose(var, -1e34), ~np.isfinite(var))
     if np.any(missing_value):
@@ -149,7 +213,7 @@ def rowsize(index: int) -> int:
 
 def preprocess(index: int) -> xr.Dataset:
     """
-    Mandatory function that extract and preprocess the Lagragangian data and attributes. The function takes and
+    Mandatory function that extract and preprocess the Lagrangian data and attributes. The function takes and
     identification number that can be used to: create a file or url pattern or select data from a Dataframe. It
     then preprocess the data and return a clean xarray Dataset.
 
@@ -446,7 +510,7 @@ def preprocess(index: int) -> xr.Dataset:
     # global attributes
     attrs = {
         "title": "Global Drifter Program hourly drifting buoy collection",
-        "history": "Version 2.00.  Metadata from dirall.dat and deplog.dat",
+        "history": f"Version {version}. Metadata from dirall.dat and deplog.dat",
         "Conventions": "CF-1.6",
         "date_created": datetime.now().isoformat(),
         "publisher_name": "GDP Drifter DAC",
@@ -458,7 +522,7 @@ def preprocess(index: int) -> xr.Dataset:
         "contributor_name": "NOAA Global Drifter Program",
         "contributor_role": "Data Acquisition Center",
         "institution": "NOAA Atlantic Oceanographic and Meteorological Laboratory",
-        "acknowledgement": "Elipot, Shane; Sykulski, Adam; Lumpkin, Rick; Centurioni, Luca; Pazos, Mayra (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide. [indicate subset used]. NOAA National Centers for Environmental Information. Dataset. https://doi.org/10.25921/x46c-3620. Accessed [date]. Elipot et al. (2022): A Dataset of Hourly Sea Surface Temperature From Drifting Buoys, Scientific Data, 9, 567, https://dx.doi.org/10.1038/s41597-022-01670-2. Elipot et al. (2016): A global surface drifter dataset at hourly resolution, J. Geophys. Res.-Oceans, 121, https://dx.doi.org/10.1002/2016JC011716.", 
+        "acknowledgement": "Elipot, Shane; Sykulski, Adam; Lumpkin, Rick; Centurioni, Luca; Pazos, Mayra (2022). Hourly location, current velocity, and temperature collected from Global Drifter Program drifters world-wide. [indicate subset used]. NOAA National Centers for Environmental Information. Dataset. https://doi.org/10.25921/x46c-3620. Accessed [date]. Elipot et al. (2022): A Dataset of Hourly Sea Surface Temperature From Drifting Buoys, Scientific Data, 9, 567, https://dx.doi.org/10.1038/s41597-022-01670-2. Elipot et al. (2016): A global surface drifter dataset at hourly resolution, J. Geophys. Res.-Oceans, 121, https://dx.doi.org/10.1002/2016JC011716.",
         "summary": "Global Drifter Program hourly data",
         "doi": "10.25921/x46c-3620",
     }
@@ -468,10 +532,7 @@ def preprocess(index: int) -> xr.Dataset:
         ds[var].attrs = vars_attrs[var]
     ds.attrs = attrs
 
-    # remove vars
-    ds = ds.drop_vars("lon360")
-
     # set coordinates
-    ds = ds.set_coords(["ids", "longitude", "latitude", "time"])
+    ds = ds.set_coords(["ids", "longitude", "lon360", "latitude", "time"])
 
     return ds
